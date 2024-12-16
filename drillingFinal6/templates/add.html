@@ -1,0 +1,66 @@
+{% extends 'base.html' %} 
+{% load bootstrap5 %} 
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <title>Document</title>
+</head>
+
+<body>
+
+    {% include "menu.html" %}
+    <div class="container">
+        <div class="container mt-5">
+            <div class="card shadow-lg">
+                <div class="card-header bg-dark text-white text-center">
+                    <h2>Registrar Vehículo</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_marca" class="form-label text-success font-weight-bold">Marca</label>
+                            {{ form.marca }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_marca" class="form-label text-success font-weight-bold">Modelo</label>
+                            {{ form.modelo}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_marca" class="form-label text-success font-weight-bold">Serial Carrocería</label>
+                            {{ form.serial_carroceria }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_marca" class="form-label text-success font-weight-bold">Serial Motor</label>
+                            {{ form.serial_motor}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_marca" class="form-label text-success font-weight-bold">Categoría</label>
+                            {{ form.categoria }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_marca" class="form-label text-success font-weight-bold">Precio</label>
+                            {{ form.precio}}
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success btn-lg w-50">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+        {% include "footer.html" %}
+    {% endblock content %}
+</body>
+
+</html>
