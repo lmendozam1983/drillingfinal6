@@ -8,17 +8,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Iniciar sesión</title>
 </head>
 <body>
 
     <div class="container py-5">
-        <h1>Ingreso</h1>
+        <h1>Iniciar sesión</h1>
         <form method="POST"> 
             {% csrf_token %} 
             {{ login_form|crispy }} 
             <button class="btn btn-success"type="submit">Ingresa acá</button> </form>
-        <p class="text-center">Si no tienes una cuenta, registrate en <a href="/vehiculo/registro">, para crear una cuenta</a>.</p>
+        <p class="text-center">Si no tienes una cuenta, registrate en, <a href="/vehiculo/registro">para crear una cuenta</a>.</p>
     </div> 
 
     {% endblock content %}
