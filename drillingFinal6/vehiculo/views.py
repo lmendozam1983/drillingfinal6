@@ -14,6 +14,8 @@ from .models import CarModel
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import permission_required
 from django.urls import reverse
+from django.views.generic import ListView
+from .models import CarModel
 
 def carform_view(request):
     context = {}
@@ -28,7 +30,9 @@ def carform_view(request):
 
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect('/')
+        next_url = '/index/'
+        messages.success(request, "Vehículo agregado exitosamente")
+        return HttpResponseRedirect(next_url)
     else:
         print(form.errors) 
 
@@ -39,25 +43,22 @@ def registro_view(request):
     if request.method == "POST": 
         form = RegistroUsuarioForm(request.POST) 
         if form.is_valid(): 
-            # obtenemos el content type del modelo 
             content_type = ContentType.objects.get_for_model(CarModel) 
-            # obtenemos el permiso a asignar 
             visualizar_catalogo = Permission.objects.get(
                 codename='visualizar_catalogo', 
                 content_type=content_type
             ) 
             user = form.save() 
-            # Agregamos el permiso al usuario el momento de registrarse 
             user.user_permissions.add(visualizar_catalogo) 
-            login(request, user) 
+            login(request, user)
+            next_url = '/index/'
             messages.success(request, "Registrado satisfactoriamente.") 
-            return HttpResponseRedirect('/') 
+            return HttpResponseRedirect(next_url)
         else:
             messages.error(request, "Registro inválido. Algunos datos son incorrectos.") 
     else:
-        form = RegistroUsuarioForm()  # Cargar el formulario vacío en caso de GET
+        form = RegistroUsuarioForm()  
     
-    # Renderiza la plantilla en caso de GET o si el formulario no es válido
     return render(
         request=request,
         template_name="registro.html",
@@ -71,30 +72,38 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(username=username,password=password)
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 messages.info(request, f"Iniciaste sesión como: {username}.")
-                return HttpResponseRedirect('/')
+                next_url = '/index/'
+                return HttpResponseRedirect(next_url)
             else:
-                messages.error(request,"Invalido username o password.")
+                messages.error(request, "Invalid username or password.")
         else:
-            messages.error(request,"Invalido username o password.")
-    form = AuthenticationForm()
-    return render(request, "login.html",{"login_form":form})
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+
+    return render(request, "login.html", {"login_form": form})
 
 def logout_view(request):
     logout(request)
     messages.info(request, "Se ha cerrado la sesión satisfactoriamente.")
     return HttpResponseRedirect('/') 
 
-from django.views.generic import ListView
-from .models import CarModel
-
 class ListadoView(ListView):
     model = CarModel  
     template_name = "listado.html"  
     context_object_name = 'vehiculos' 
+    
+class ListadoView2(ListView):
+    model = CarModel  
+    template_name = "listado2.html"  
+    context_object_name = 'vehiculos'
+    
+def index_views(request):
+    return render(request, 'index.html')
 
 @permission_required('vehiculo.visualizar_catalogo', login_url='/login/')
 def listar_vehiculos(request):
